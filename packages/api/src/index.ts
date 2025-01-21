@@ -25,9 +25,11 @@ const app = new Elysia()
       case "HTTP_ERROR":
         set.status = error.status;
 
-        return {
-          message: error.message,
-        };
+        return { message: error.message };
+      case "VALIDATION":
+        set.status = error.status;
+
+        return JSON.parse(error.message);
       default:
         return error;
     }
