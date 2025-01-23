@@ -1,7 +1,7 @@
 # Proof of Concept - Monorepo
 
 > [!NOTE]
-> Run `pnpm i`
+> Run `bun i` every time package changed
 
 ## Library
 
