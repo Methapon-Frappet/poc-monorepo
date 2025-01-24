@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { client } from '@/utils/api'
-import HelloWorld from '@/components/HelloWorld.vue'
+import { onMounted, ref } from 'vue';
+import { client } from '@/utils/api';
+import HelloWorld from '@/components/HelloWorld.vue';
 
 onMounted(async () => {
-  response.value = await greet.index.get()
-})
+  response.value = await greet.index.get();
+});
 
-const greet = client.api.v1.greet
-const response = ref<Awaited<ReturnType<typeof greet.index.get>>>()
+const greet = client.api.v1.greet;
+const response = ref<Awaited<ReturnType<typeof greet.index.get>>>();
 </script>
 
 <template>

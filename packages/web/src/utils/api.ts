@@ -1,4 +1,4 @@
-import { apiClient } from 'lib'
+import { apiClient } from 'lib';
 
 export const client = apiClient(import.meta.env.VITE_API_URL, {
   onRequest: async (_path, _options) => {
@@ -6,6 +6,6 @@ export const client = apiClient(import.meta.env.VITE_API_URL, {
       headers: {
         ['authorization']: `Bearer ${import.meta.env.VITE_API_TOKEN}`,
       },
-    }
+    };
   },
-})
+});
