@@ -1,3 +1,4 @@
+import consola from "consola";
 import { Elysia } from "elysia";
 import { swagger } from "@elysiajs/swagger";
 import cors from "@elysiajs/cors";
@@ -25,11 +26,22 @@ const app = new Elysia()
       case "HTTP_ERROR":
         set.status = error.status;
 
-        return { message: error.message };
+        consola.error(error.stack);
+
+        return JSON.parse(error.message);
       case "VALIDATION":
         set.status = error.status;
 
+        consola.warn(error.stack);
+
         return JSON.parse(error.message);
+
+      case "NOT_FOUND":
+        set.status = error.status;
+
+        consola.warn(error.stack);
+
+        return error.message;
       default:
         return error;
     }
@@ -37,7 +49,7 @@ const app = new Elysia()
   .use(swagger(SWAGGER_OPTIONS))
   .use(cors())
   .use(greetRoute)
-  .listen(3000, (server) =>
+  .listen(process.env.APP_PORT || 3000, (server) =>
     console.log(`🦊 Elysia is running at ${server?.hostname}:${server?.port}`),
   );
 

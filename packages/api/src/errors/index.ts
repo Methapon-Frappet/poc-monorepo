@@ -8,12 +8,14 @@ export class HttpError extends Error {
   message: string;
   code?: string;
 
-  constructor(status: HttpStatus, message: string) {
-    super(message);
+  constructor(status: HttpStatus, message: string | Record<string, any>) {
+    const msg = JSON.stringify(message);
+
+    super(msg);
 
     this.name = "HttpError";
     this.status = status;
-    this.message = message;
+    this.message = msg;
   }
 }
 

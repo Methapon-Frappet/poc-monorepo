@@ -6,7 +6,7 @@ services:
     ports:
       - 3000:3000
     environment:
-      AUTH_REALM_URL: http://localhost:8080/realms/jws
+      AUTH_REALM_URL: http://localhost:8080/realms/dev
   web:
     build:
       context: .
