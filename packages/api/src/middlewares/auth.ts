@@ -1,9 +1,7 @@
 import Elysia from "elysia";
-import { createDecoder } from "fast-jwt";
+import { createVerifier, VerifierAsync } from "fast-jwt";
 import { HttpError, noPermission } from "../errors";
 import HttpStatus from "../errors/http-status";
-
-const jwtDecode = createDecoder();
 
 interface User {
   sub: string;
@@ -15,15 +13,22 @@ interface User {
   roles: string[];
 }
 
-async function keycloakAuth(token: string) {
-  const response = await fetch(
-    `${process.env.AUTH_REALM_URL}/protocol/openid-connect/userinfo`,
-    { headers: { ["Authorization"]: `Bearer ${token}` } },
-  );
+let jwtVerify: typeof VerifierAsync | null = null;
 
-  if (response.ok) {
-    return jwtDecode(token) as User;
+async function keycloakAuth(token: string) {
+  if (!jwtVerify) {
+    const response = await fetch(`${process.env.AUTH_REALM_URL}`, {
+      headers: { ["Authorization"]: `Bearer ${token}` },
+    });
+    const result = await response.json();
+
+    jwtVerify = createVerifier({
+      key: async () =>
+        `-----BEGIN PUBLIC KEY-----\n${result["public_key"]}\n-----END PUBLIC KEY-----`,
+    });
   }
+
+  return await jwtVerify(token);
 }
 
 export function auth() {
