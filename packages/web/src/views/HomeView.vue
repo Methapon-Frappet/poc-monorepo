@@ -4,11 +4,11 @@ import { client } from '@/utils/api';
 import HelloWorld from '@/components/HelloWorld.vue';
 
 onMounted(async () => {
-  response.value = await greet.index.get();
+  response.value = await hello.index.get();
 });
 
-const greet = client.api.v1.greet;
-const response = ref<Awaited<ReturnType<typeof greet.index.get>>>();
+const hello = client.api.v1;
+const response = ref<Awaited<ReturnType<typeof hello.index.get>>>();
 </script>
 
 <template>
