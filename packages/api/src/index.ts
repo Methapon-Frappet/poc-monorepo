@@ -1,9 +1,11 @@
-import consola from "consola";
 import { Elysia } from "elysia";
 import { swagger } from "@elysiajs/swagger";
 import cors from "@elysiajs/cors";
-import { greetRoute } from "./routes/hello-world";
+
+import consola from "consola";
+
 import { HttpError } from "./errors";
+import { helloRoute } from "./routes/hello-world";
 
 const SWAGGER_OPTIONS = {
   documentation: {
@@ -48,7 +50,7 @@ const app = new Elysia()
   })
   .use(swagger(SWAGGER_OPTIONS))
   .use(cors())
-  .use(greetRoute)
+  .use(helloRoute)
   .listen(process.env.APP_PORT || 3000, (server) =>
     console.log(`🦊 Elysia is running at ${server?.hostname}:${server?.port}`),
   );

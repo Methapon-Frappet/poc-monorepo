@@ -1,7 +1,7 @@
 import Elysia, { t } from "elysia";
 import { auth } from "../middlewares/auth";
 
-export const greetRoute = new Elysia({ name: "greet", prefix: "api/v1" })
+export const helloRoute = new Elysia({ name: "greet", prefix: "api/v1" })
   .use(auth())
   .get("/", (_) => ({ message: "Hello from Elysia" }), {
     security: {

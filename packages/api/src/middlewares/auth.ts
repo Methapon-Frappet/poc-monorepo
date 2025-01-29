@@ -1,8 +1,8 @@
 import Elysia from "elysia";
-import { createVerifier, VerifierAsync } from "fast-jwt";
-import { HttpError, noPermission } from "../errors";
-import HttpStatus from "../errors/http-status";
 import consola from "consola";
+import { createVerifier, VerifierAsync } from "fast-jwt";
+import HttpStatus from "../interface/http-status";
+import { HttpError, noPermission } from "../errors";
 
 interface User {
   sub: string;
