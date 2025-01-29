@@ -28,7 +28,7 @@ async function keycloakAuth(token: string) {
     });
   }
 
-  return await jwtVerify(token);
+  return await jwtVerify(token).catch((e) => consola.warn(e));
 }
 
 export function auth() {
