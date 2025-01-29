@@ -1,19 +1,16 @@
 import Elysia, { t } from "elysia";
 import { auth } from "../middlewares/auth";
 
-export const greetRoute = new Elysia({ name: "greet", prefix: "api/v1/greet" })
+export const greetRoute = new Elysia({ name: "greet", prefix: "api/v1/hello" })
   .use(auth())
-  .get("/", (_ctx) => ({ message: "Hello from Elysia" }), {
-    authRequired: true,
-    authRoles: [],
+  .get("/", (_) => ({ message: "Hello from Elysia" }), {
+    security: {
+      enabled: true,
+      roles: [],
+    },
   })
-  .post("/", ({ body }) => body, {
+  .post("/", ({ body }) => `Hello ${body.subject}`, {
     body: t.Object({
-      username: t.String(),
-      password: t.Optional(
-        t.String({
-          examples: ["example1", "example2"],
-        }),
-      ),
+      subject: t.String(),
     }),
   });

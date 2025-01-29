@@ -43,13 +43,10 @@ export function auth() {
       return { bearer, user: await keycloakAuth(bearer) };
     })
     .macro(({ onBeforeHandle }) => ({
-      authRequired(enabled: boolean) {
-        if (enabled) {
-          onBeforeHandle(authHandle());
+      security(opts: { enabled: boolean; roles?: string[] }) {
+        if (opts.enabled) {
+          onBeforeHandle(authHandle(opts.roles));
         }
-      },
-      authRoles(roles: string[]) {
-        onBeforeHandle(authHandle(roles));
       },
     }));
 }
