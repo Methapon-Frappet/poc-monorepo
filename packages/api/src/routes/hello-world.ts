@@ -1,5 +1,5 @@
 import Elysia, { t } from "elysia";
-import { auth, authHandle } from "../middlewares/auth";
+import { auth } from "../middlewares/auth";
 
 export const greetRoute = new Elysia({ name: "greet", prefix: "api/v1/greet" })
   .use(auth())
