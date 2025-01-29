@@ -9,7 +9,7 @@ export class HttpError extends Error {
   code?: string;
 
   constructor(status: HttpStatus, message: string | Record<string, any>) {
-    const msg = typeof message === "string" ? message : JSON.stringify(message);
+    const msg = JSON.stringify(message);
 
     super(msg);
 
