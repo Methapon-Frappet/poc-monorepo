@@ -2,6 +2,7 @@ import Elysia from "elysia";
 import { createVerifier, VerifierAsync } from "fast-jwt";
 import { HttpError, noPermission } from "../errors";
 import HttpStatus from "../errors/http-status";
+import consola from "consola";
 
 interface User {
   sub: string;
@@ -32,17 +33,25 @@ async function keycloakAuth(token: string) {
 }
 
 export function auth() {
-  return new Elysia({ name: "auth" }).derive(
-    { as: "global" },
-    async function deriveAuth({ headers }) {
+  return new Elysia({ name: "auth" })
+    .derive({ as: "global" }, async function deriveAuth({ headers }) {
       const auth = headers["authorization"];
       const bearer = auth?.startsWith("Bearer ") ? auth.slice(7) : null;
 
       if (!bearer) return;
 
       return { bearer, user: await keycloakAuth(bearer) };
-    },
-  );
+    })
+    .macro(({ onBeforeHandle }) => ({
+      authRequired(enabled: boolean) {
+        if (enabled) {
+          onBeforeHandle(authHandle());
+        }
+      },
+      authRoles(roles: string[]) {
+        onBeforeHandle(authHandle(roles));
+      },
+    }));
 }
 
 export function authHandle(roles?: string[]) {
