@@ -12,24 +12,25 @@ interface User {
   preferred_username: string;
   email: string;
   roles: string[];
+  [key: string]: any;
 }
 
-let jwtVerify: typeof VerifierAsync | null = null;
+class KeycloakVerifier {
+  static #verifier: typeof VerifierAsync;
 
-async function keycloakAuth(token: string) {
-  if (!jwtVerify) {
-    const response = await fetch(`${process.env.AUTH_REALM_URL}`, {
-      headers: { ["Authorization"]: `Bearer ${token}` },
-    });
-    const result = await response.json();
+  static async verify(token: string) {
+    if (!this.#verifier) {
+      const response = await fetch(`${process.env.AUTH_REALM_URL}`);
+      const result = await response.json();
 
-    jwtVerify = createVerifier({
-      key: async () =>
-        `-----BEGIN PUBLIC KEY-----\n${result["public_key"]}\n-----END PUBLIC KEY-----`,
-    });
+      this.#verifier = createVerifier({
+        key: async () =>
+          `-----BEGIN PUBLIC KEY-----\n${result["public_key"]}\n-----END PUBLIC KEY-----`,
+      });
+    }
+
+    return await this.#verifier(token).catch((e) => consola.warn(e));
   }
-
-  return await jwtVerify(token).catch((e) => consola.warn(e));
 }
 
 export function auth() {
@@ -40,7 +41,7 @@ export function auth() {
 
       if (!bearer) return;
 
-      return { bearer, user: await keycloakAuth(bearer) };
+      return { bearer, user: await KeycloakVerifier.verify(bearer) };
     })
     .macro(({ onBeforeHandle }) => ({
       security(opts: { enabled: boolean; roles?: string[] }) {
