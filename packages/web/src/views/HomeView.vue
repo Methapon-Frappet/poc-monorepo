@@ -13,16 +13,12 @@ const response = ref<Awaited<ReturnType<typeof hello.index.get>>>();
 
 <template>
   <HelloWorld msg="You did it!" />
+  <hr class="tw:opacity-10 tw:my-4" />
 
-  <pre>{{ JSON.stringify(response, null, 4) }}</pre>
+  <h2 class="tw:text-center tw:mb-4 tw:text-gray-800">Elysia API Response</h2>
+  <pre
+    class="tw:bg-emerald-50/50 tw:text-gray-800 tw:rounded-md tw:transition tw:border tw:border-emerald-100 tw:hover:ring-4 tw:ring-emerald-600/50 tw:p-4 tw:text-left tw:shadow-lg"
+  ><code>{{ JSON.stringify(response, null, 4) }}</code></pre>
 </template>
 
-<style scoped>
-pre {
-  background-color: hsla(240 20% 96% / 1);
-  padding: 1rem;
-  border-radius: 7px;
-  border: 1px solid hsla(240 20% 92% / 0.1);
-  text-align: left;
-}
-</style>
+<style scoped></style>
