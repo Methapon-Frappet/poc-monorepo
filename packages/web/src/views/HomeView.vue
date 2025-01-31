@@ -8,7 +8,7 @@ onMounted(async () => {
 });
 
 const hello = client.api.v1;
-const response = ref<Awaited<ReturnType<typeof hello.index.get>>>();
+const response = ref<Awaited<ReturnType<typeof hello.index.get>> | null>(null);
 </script>
 
 <template>
@@ -18,7 +18,8 @@ const response = ref<Awaited<ReturnType<typeof hello.index.get>>>();
   <h2 class="tw:text-center tw:mb-4 tw:text-gray-800">Elysia API Response</h2>
   <pre
     class="tw:bg-emerald-50/50 tw:text-gray-800 tw:rounded-md tw:transition tw:border tw:border-emerald-100 tw:hover:ring-4 tw:ring-emerald-600/50 tw:p-4 tw:text-left tw:shadow-lg"
-  ><code>{{ JSON.stringify(response, null, 4) }}</code></pre>
+    >{{ JSON.stringify(response, null, 4) }}</pre
+  >
 </template>
 
 <style scoped></style>
