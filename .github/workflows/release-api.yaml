@@ -1,5 +1,5 @@
 name: Release API
-run-name: Release Web (${{ github.actor }})
+run-name: Release API (${{ github.actor }})
 
 on:
   push:
