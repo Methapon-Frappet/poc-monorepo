@@ -1,0 +1,133 @@
+name: Development Build
+run-name: Development Build (${{ github.actor }})
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+  IMAGE_NAME: poc-monorepo
+  IMAGE_VERSION: dev-${{ github.run_number }}
+
+jobs:
+  build-api:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "IMAGE_NAME=${{ env.IMAGE_NAME }}/api" >> $GITHUB_ENV
+      - run: echo "IMAGE_NAME=${{ env.IMAGE_NAME }}"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login in to registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{env.REGISTRY}}
+          username: ${{secrets.DOCKER_USER}}
+          password: ${{secrets.DOCKER_PASS}}
+      - name: Build and push docker image
+        uses: docker/build-push-action@v3
+        with:
+          platforms: linux/amd64
+          context: .
+          file: ./docker/api.Dockerfile
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+          push: true
+      - name: Notify Discord Success
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d '{
+            "embeds": [{
+              "title": "✅ Deployment Success!",
+              "description": "**Details:**\n- Image: `${{env.IMAGE_NAME}}`\n- Version: `${{ env.IMAGE_VERSION }}`\n- Deployed by: `${{ github.actor }}`",
+              "color": 3066993,
+              "footer": {
+                "text": "Release Notification",
+                "icon_url": "https://i.imgur.com/fKL31aD.jpg"
+              },
+              "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
+            }]
+          }' \
+          ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Notify Discord Failure
+        if: failure()
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d '{
+            "embeds": [{
+              "title": "❌ Deployment Failed!",
+              "description": "**Details:**\n- Image: `${{env.IMAGE_NAME}}`\n- Version: `${{ env.IMAGE_VERSION }}`\n- Attempted by: `${{ github.actor }}`",
+              "color": 15158332,
+              "footer": {
+                "text": "Release Notification",
+                "icon_url": "https://i.imgur.com/fKL31aD.jpg"
+              },
+              "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
+            }]
+          }' \
+          ${{ secrets.DISCORD_WEBHOOK }}
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "IMAGE_NAME=${{ env.IMAGE_NAME }}/web" >> $GITHUB_ENV
+      - run: echo "IMAGE_NAME=${{ env.IMAGE_NAME }}"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login in to registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{env.REGISTRY}}
+          username: ${{secrets.DOCKER_USER}}
+          password: ${{secrets.DOCKER_PASS}}
+      - name: Build and push docker image
+        uses: docker/build-push-action@v3
+        with:
+          platforms: linux/amd64
+          context: .
+          file: ./docker/web.Dockerfile
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+          push: true
+      - name: Notify Discord Success
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d '{
+            "embeds": [{
+              "title": "✅ Deployment Success!",
+              "description": "**Details:**\n- Image: `${{env.IMAGE_NAME}}`\n- Version: `${{ env.IMAGE_VERSION }}`\n- Deployed by: `${{ github.actor }}`",
+              "color": 3066993,
+              "footer": {
+                "text": "Release Notification",
+                "icon_url": "https://i.imgur.com/fKL31aD.jpg"
+              },
+              "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
+            }]
+          }' \
+          ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Notify Discord Failure
+        if: failure()
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d '{
+            "embeds": [{
+              "title": "❌ Deployment Failed!",
+              "description": "**Details:**\n- Image: `${{env.IMAGE_NAME}}`\n- Version: `${{ env.IMAGE_VERSION }}`\n- Attempted by: `${{ github.actor }}`",
+              "color": 15158332,
+              "footer": {
+                "text": "Release Notification",
+                "icon_url": "https://i.imgur.com/fKL31aD.jpg"
+              },
+              "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
+            }]
+          }' \
+          ${{ secrets.DISCORD_WEBHOOK }}
