@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY: docker.io
+  REGISTRY: ${{ var.DOCKER_REGISTRY }}
   IMAGE_NAME: poc-monorepo-web
   IMAGE_VERSION: build
 
