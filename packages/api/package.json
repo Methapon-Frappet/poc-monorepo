@@ -10,7 +10,7 @@
     "@elysiajs/cors": "^1.2.0",
     "@elysiajs/swagger": "^1.2.0",
     "consola": "^3.4.0",
-    "elysia": "1.2.10",
+    "elysia": "^1.2.11",
     "fast-jwt": "^5.0.5"
   },
   "devDependencies": {
