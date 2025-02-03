@@ -4,7 +4,8 @@ run-name: Release Web (${{ github.actor }})
 on:
   push:
     tags:
-      - "web-v[0-9]+.[0-9]+.[0-9]+([a-zA-Z0-9-.]+)"
+      - "web-v[0-9]+.[0-9]+.[0-9]+"
+      - "web-v[0-9]+.[0-9]+.[0-9]+*"
   workflow_dispatch:
 
 env:
