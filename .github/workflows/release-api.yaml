@@ -9,8 +9,8 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY: ${{ var.DOCKER_REGISTRY }}
-  IMAGE_NAME: poc-monorepo-api
+  REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+  IMAGE_NAME: poc-monorepo/api
   IMAGE_VERSION: build
 
 jobs:
