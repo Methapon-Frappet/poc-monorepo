@@ -2,9 +2,10 @@ import './assets/main.css';
 
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
-import { Quasar } from 'quasar';
+import { Dialog, Loading, Quasar } from 'quasar';
 
-import '@quasar/extras/material-icons/material-icons.css';
+import iconSet from 'quasar/icon-set/mdi-v7';
+import '@quasar/extras/mdi-v7/mdi-v7.css';
 import 'quasar/src/css/index.sass';
 
 import App from './App.vue';
@@ -14,7 +15,11 @@ const app = createApp(App);
 
 app.use(createPinia());
 app.use(Quasar, {
-  plugins: {},
+  iconSet,
+  plugins: {
+    Dialog,
+    Loading,
+  },
 });
 app.use(router);
 
